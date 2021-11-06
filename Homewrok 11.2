@@ -1,0 +1,90 @@
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+string email;
+string firstpart;
+string secondpart;
+
+string segmentation(string email){
+    for (int i = 0;email[i] != '@';++i) firstpart += email[i];
+    if (firstpart.length() < email.length()) {
+        for (int i = firstpart.length() + 1; i != email.length(); ++i) secondpart += email[i];
+        return firstpart, secondpart;
+    }
+    else return firstpart;
+}
+
+bool validation(string email){
+  bool valid = true;
+  string fdict = ".!#$%&'*+-/=?^_`{|}~ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+  string sdict = ".-ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+    if (firstpart.length() == email.length()) {
+        valid = false;
+        return valid;
+    }
+    if (firstpart.length() < 1 || firstpart.length() > 64) {
+        valid = false;
+        return valid;
+    }
+    if (secondpart.length() < 1 || secondpart.length() > 63) {
+        valid = false;
+        return valid;
+    }
+    for (int i = 0;i != firstpart.length() - 1;++i) {
+        if ((firstpart[i] == '.' && firstpart[i+1] == '.') || (firstpart[i] == '.' && firstpart[i-1] == '.')){
+            valid = false;
+            break;
+        }
+        else if (email[0] == '.' || email[email.length()-1] == '.' || firstpart[firstpart.length()] == '.') {
+            valid = false;
+            break;
+        }
+        else {
+            int check = 0;
+            for (int n = 0; n != fdict.length() - 1; ++n) {
+                if (firstpart[i] == fdict[n]) ++check;
+            }
+            if (check == 0) {
+                valid = false;
+                break;
+            }
+        }
+    }
+    //second part
+    for (int i = 0;i != secondpart.length() - 1;++i) {
+        if (secondpart[i] == '.' && (secondpart[i+1] == '.' || secondpart[i-1] == '.')) {
+            valid = false;
+            break;
+        }
+        else if (secondpart[0] =='.') {
+            valid = false;
+            break;
+        }
+        else {
+            int check = 0;
+            for (int n = 0; n != sdict.length() - 1; ++n) {
+                if (secondpart[i] == sdict[n]) ++check;
+            }
+            if (check == 0) {
+                valid = false;
+                break;
+            }
+        }
+    }
+    return valid;
+}
+
+int main() {
+    cout << "Input your E-mail: ";
+    getline(cin,email);
+    if(email.length() > 1) segmentation(email);
+    else {
+        cout << "No" << endl;
+        return 0;
+    }
+    if (validation(email) == false) cout << "No" << endl;
+    else cout << "Yes" << endl;
+    return 0;
+}
