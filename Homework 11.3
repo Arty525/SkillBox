@@ -1,0 +1,104 @@
+#include <iostream>
+using namespace std;
+
+string ip;
+string first;
+string second;
+string third;
+string fourth;
+
+string segmentation(string ip){
+    for (int i = 0;ip[i] != '.';++i) first += ip[i];
+    for (int i = first.length() + 1; ip[i] != '.'; ++i) second += ip[i];
+    for (int i = second.length() + first.length() + 2; ip[i] != '.'; ++i) third += ip[i];
+    for (int i = second.length() + third.length() + first.length() + 3; i != ip.length(); ++i) fourth += ip[i];
+    return first, second, third, fourth;
+}
+
+bool validation(string ip) {
+    bool valid = true;
+    int dot = 0;
+    for (int i = 0; i < ip.length() && valid != false; ++i) {
+        if (ip[i] != '.' && (ip[i] < '0' || ip[i] > '9')) {
+            valid = false;
+            break;
+        }
+        if (ip[i] == '.') ++dot;
+        if (dot > 3) valid = false;
+        if ((ip[i-1] == '.' || ip[i+1] == '.') && ip[i] == '.') valid = false;
+    }
+    if (dot < 3) {
+        valid = false;
+        return valid;
+    }
+    segmentation(ip);
+    for (int i = 0; first[i] >= '0' && first[i] <= '9' && valid != false; ++i) {
+        if (first[i] < '0' || first[i] > '9') {
+            valid = false;
+            break;
+        }
+        if (first.length() == 3 && (first[0] > '2' || first[0] <= '0')) {
+            valid = false;
+            break;
+        }
+        else if (first.length() == 3 && first[0] == '2' && (first[1] > '5' || (first[1] == '5' && first[2] > '5'))) {
+            valid = false;
+            break;
+        }
+        else if (first.length() == 2 && first[0] <= '0') {
+            valid = false;
+            break;
+        }
+    }
+    for (int i = 0; second[i] >= '0' && second[i] <= '9' && valid != false; ++i) {
+        if (second.length() == 3 && (second[0] > '2' || second[0] <= '0')) {
+            valid = false;
+            break;
+        }
+        else if (second.length() == 3 && second[0] == '2' && (second[1] > '5' || (second[1] == '5' && second[2] > '5'))) {
+            valid = false;
+            break;
+        }
+        else if (second.length() == 2 && second[0] <= '0') {
+            valid = false;
+            break;
+        }
+    }
+    for (int i = 0; third[i] >= '0' && third[i] <= '9' && valid != false; ++i) {
+        if (third.length() == 3 && (third[0] > '2' || third[0] <= '0')) {
+            valid = false;
+            break;
+        }
+        else if (third.length() == 3 && third[0] == '2' && (third[1] > '5' || (third[1] == '5' && third[2] > '5'))) {
+            valid = false;
+            break;
+        }
+        else if (third.length() == 2 && third[0] <= '0') {
+            valid = false;
+            break;
+        }
+    }
+    for (int i = 0; fourth[i] >= '0' && fourth[i] <= '9' && valid != false; ++i) {
+        if (fourth.length() == 3 && (fourth[0] > '2' || fourth[0] <= '0')) {
+            valid = false;
+            break;
+        }
+        else if (fourth.length() == 3 && fourth[0] == '2' && (fourth[1] > '5' || (fourth[1] == '5' && fourth[2] > '5'))) {
+            valid = false;
+            break;
+        }
+        else if (fourth.length() == 2 && fourth[0] <= '0') {
+            valid = false;
+            break;
+        }
+    }
+    return valid;
+}
+
+int main() {
+    cout << "input ip: ";
+    cin >> ip;
+    if (validation(ip) == true) cout << "Yes";
+    else cout << "No";
+    return 0;
+}
