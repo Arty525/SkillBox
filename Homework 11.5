@@ -1,0 +1,146 @@
+#include <iostream>
+using namespace std;
+
+string x1;
+string x2;
+string x3;
+string winner;
+int error = 0;
+bool valid = true;
+
+void game(string x1, string x2, string x3) {
+  int win = 0;
+  for (int i = 0; i != 3; ++i){
+    if(x1[i] == x2[i] && x2[i] == x3[i]) {
+      if(x1[i] == 'X') {
+        winner = "Petya";
+        ++win;
+      }
+      if(x1[i] == 'O') {
+        winner = "Vanya";
+        ++win;
+      }
+    }
+  }
+  if((x1[0] == x2[1] && x2[1] == x3[2]) || (x1[2] == x2[1] && x2[1] == x3[0])) {
+    if(x1[0] == 'X' || x1[2] == 'X') {
+      winner = "Petya";
+      ++win;
+    }
+    if(x1[0] == 'O' || x1[2] == 'O') {
+      winner = "Vanya";
+      ++win;
+    }
+  }
+  else if((x1[0] == x1[1] && x1[1] == x1[2]) || (x2[0] == x2[1] && x2[1] == x2[2]) || (x3[0] == x3[1] && x3[1] == x3[2])) {
+    if(x1[0] == 'X' || x2[0] == 'X' || x3[0] == 'X') {
+      winner = "Petya";
+      ++win;
+    }
+    if(x1[0] == 'O' || x2[0] == 'O' || x3[0] == 'O') {
+      winner = "Vanya";
+      ++win;
+    }
+  }
+  else if (winner != "Petya" && winner != "Vanya") winner = "Nobody";
+  if(win > 1) valid = false;
+}
+
+void validation (string x1, string x2, string x3) {
+  int o = 0;
+  int x = 0;
+  int space = 0;
+  game(x1,x2,x3);
+  if(valid != false) {
+    for (int y = 0; y != 3; ++y) {
+        if (x1[y] != 'X' && x1[y] != 'O' && x1[y] != '.') {
+            error = 1; // Недопустимый символ в первой строке. / Unacceptable symbol at first sring.
+            valid = false;
+
+            break;
+        }
+        if (x2[y] != 'X' && x2[y] != 'O' && x2[y] != '.') {
+            error = 2; // Недопустимый символ во второй строке. / Unacceptable symbol at second sring.
+            valid = false;
+
+            break;
+        }
+        if (x3[y] != 'X' && x3[y] != 'O' && x3[y] != '.') {
+            error = 3; // Недопустимый символ в третьей строке. / Unacceptable symbol at third sring.
+            valid = false;
+
+            break;
+        }
+    }
+    //Проверка длины строки / String length checking
+    if (x1.length() != 3 || x2.length() != 3 || x3.length() != 3) {
+        error = 4; // Недопустимая длинна строки. / Unacceptable string length.
+        valid = false;
+
+    }
+    else {
+        //проверка количества символов / Symbol amount checking
+        for (int y = 0; y != 3; ++y) {
+            if (x1[y] == 'X') ++x;
+            else if (x1[y] == 'O') ++o;
+            else ++space;
+        }
+        for (int y = 0; y != 3; ++y) {
+            if (x2[y] == 'X') ++x;
+            else if (x2[y] == 'O') ++o;
+            else ++space;
+        }
+        for (int y = 0; y != 3; ++y) {
+            if (x3[y] == 'X') ++x;
+            else if (x3[y] == 'O') ++o;
+            else ++space;
+        }
+        if (x - o >= 2 || (winner == "Vanya" && x > o)) {
+            error = 5; // Лишние крестики / Extra crosses
+            valid = false;
+
+        }
+        else if (o >= x && winner != "Vanya") {
+            error = 6; // Лишние нолики / Extra zeros
+            valid = false;
+
+        }
+    }
+  }
+  else error = 7; //Лишние победители / Extra winners
+}
+
+void align (string x1, string x2, string x3) {
+    string line1;
+    string line2;
+    string line3;
+    for (int i = 0; i != 3; ++i) {
+        line1 += 32;
+        line1 += x1[i];
+    }
+    for (int i = 0; i != 3; ++i) {
+        line2 += 32;
+        line2 += x2[i];
+    }
+    for (int i = 0; i != 3; ++i) {
+        line3 += 32;
+        line3 += x3[i];
+    }
+    cout << line1 << endl << line2 << endl << line3 << endl;
+}
+
+
+int main() {
+    cout << "Input first line: " << endl;
+    cin >> x1;
+    cout << "Input second line: " << endl;
+    cin >> x2;
+    cout << "Input third line: " << endl;
+    cin >> x3;
+    validation(x1,x2,x3);
+    align(x1,x2,x3);
+    if (valid == false) cout << "Incorrect" << endl;
+    else cout << winner << endl;
+    if (error != 0) cout << "Error code: " << error;
+    return 0;
+}
