@@ -1,0 +1,223 @@
+#include <iostream>
+using namespace std;
+
+string firstNumber;
+string secondNumber;
+string fp1;
+string sp1;
+string fp2;
+string sp2;
+string number;
+int dot = 0;
+bool valid = true;
+
+bool validation (string number) {
+    int minus = 0;
+    int count = 0;
+    do {
+        if (number[count] != '-' && number[count] != '.' && (number[count] < '0' || number[count] > '9')) {
+            valid = false;
+            break;
+        }
+        if (number[count] == '-' && (number[count-1] >= '0' || number[count-1] <= '9') && count > 0) {
+            valid = false;
+            break;
+        }
+        if (number.length() == 2 && (number[1] < '0' || number[1] > '9') && (number[0] == '-' || number[0] == '.')) {
+            valid = false;
+            break;
+        }
+        else if (number.length() == 1 && (number[0] < '0' || number[0] > '9')) {
+            valid = false;
+            break;
+        }
+        if((number[0] == '-') || (number[0] >= '0' && number [0] <= '9') || number[0] == '.') {
+            if(number[0] == '.') {
+                number = '0' + number;
+            }
+            else if(number[0] == '-' && number[1] == '.') {
+                number[0] = '0';
+                number = '-' + number;
+            }
+            if(number[count] == '.') ++dot;
+            if(number[count] == '-') ++minus;
+            if(dot > 1 || minus > 1) {
+                valid = false;
+                break;
+            }
+        }
+        ++count;
+    } while (count != number.length());
+
+    if (valid != false) valid = true;
+
+    return valid;
+}
+
+string segmentationFirst (string){
+    dot = 0;
+    for (int i = 0; i != firstNumber.length() - 1; ++i) if (firstNumber[i] == '.') ++dot;
+    for (int i = 0;firstNumber[i] != '.' && i != firstNumber.length();++i) fp1 += firstNumber[i];
+    if (dot > 0) for (int i = fp1.length() + 1; i != firstNumber.length(); ++i) sp1 += firstNumber[i];
+    else sp1 = '0';
+    return fp1, sp1;
+}
+string segmentationSecond (string){
+    dot = 0;
+    for (int i = 0; i != secondNumber.length() - 1; ++i) if (secondNumber[i] == '.') ++dot;
+    for (int i = 0;secondNumber[i] != '.' && i != secondNumber.length();++i) fp2 += secondNumber[i];
+    if (dot > 0) for (int i = fp2.length() + 1; i != secondNumber.length(); ++i) sp2 += secondNumber[i];
+    else sp2 = '0';
+    return fp2, sp2;
+}
+
+void compare (string fp1, string fp2, string sp1, string sp2){
+    string compare;
+    if (fp1.length() > fp2.length() && fp1[0] != '-') compare = "More";
+    else if (fp1.length() < fp2.length() && fp2[0] != '-') compare = "Less";
+
+    if (fp1[0] == '-' && fp2[0] != '-') compare = "Less";
+    else if (fp1[0] != '-' && fp2[0] == '-') compare = "More";
+
+    if (fp1[0] == '-' && fp2[0] == '-') {
+        if (fp1.length() > fp2.length()) compare = "Less";
+        else if (fp1.length() < fp2.length()) compare = "More";
+    }
+
+    if (fp1.length() == fp2.length()) {
+        if (fp1[0] != '-' && fp2[0] != '-') {
+            for (int i = 0; i != fp1.length(); ++i) {
+                if (fp1[i] > fp2[i]) {
+                    compare = "More";
+                    break;
+                }
+                else if (fp1[i] < fp2[i]) {
+                    compare = "Less";
+                    break;
+                }
+            }
+        }
+        else if (fp1[0] == '-' && fp2[0] == '-') {
+            for (int i = 0; i != fp1.length(); ++i) {
+                if (fp1[i] > fp2[i]) {
+                    compare = "Less";
+                    break;
+                }
+                else if (fp1[i] < fp2[i]) {
+                    compare = "More";
+                    break;
+                }
+            }
+        }
+    }
+    if (compare != "More" && compare != "Less") {
+        if (fp1[0] != '-' && fp2[0] != '-') {
+            if (sp1.length() > sp2.length()) {
+                for(int i = 0; i != sp2.length(); ++i) {
+                    if (sp1[i] > sp2[i]) {
+                        compare = "More";
+                        break;
+                    }
+                    else if (sp1[i] < sp2[i]) {
+                        compare = "Less";
+                        break;
+                    }
+                }
+            }
+            else if (sp1.length() < sp2.length()) {
+                for(int i = 0; i != sp1.length(); ++i) {
+                    if (sp1[i] > sp2[i]) {
+                        compare = "More";
+                        break;
+                    }
+                    else if (sp1[i] < sp2[i]) {
+                        compare = "Less";
+                        break;
+                    }
+                }
+            }
+            else if (sp1.length() == sp2.length()) {
+                for(int i = 0; i != sp1.length(); ++i) {
+                    if (sp1[i] > sp2[i]) {
+                        compare = "More";
+                        break;
+                    }
+                    else if (sp1[i] < sp2[i]) {
+                        compare = "Less";
+                        break;
+                    }
+                }
+            }
+        }
+        else {
+            if (sp1.length() > sp2.length()) {
+                for(int i = 0; i != sp2.length(); ++i) {
+                    if (sp1[i] < sp2[i]) {
+                        compare = "More";
+                        break;
+                    }
+                    else if (sp1[i] > sp2[i]) {
+                        compare = "Less";
+                        break;
+                    }
+                }
+            }
+            else if (sp1.length() < sp2.length()) {
+                for(int i = 0; i != sp1.length(); ++i) {
+                    if (sp1[i] < sp2[i]) {
+                        compare = "More";
+                        break;
+                    }
+                    else if (sp1[i] > sp2[i]) {
+                        compare = "Less";
+                        break;
+                    }
+                }
+            }
+            else if (sp1.length() == sp2.length()) {
+                for(int i = 0; i != sp1.length(); ++i) {
+                    if (sp1[i] < sp2[i]) {
+                        compare = "More";
+                        break;
+                    }
+                    else if (sp1[i] > sp2[i]) {
+                        compare = "Less";
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    if (compare != "Less" && compare != "More") compare = "Equal";
+    cout << compare;
+}
+
+//===================================================//
+
+int main() {
+    cout << "Input first number: ";
+    cin >> number;
+    validation(number);
+    if (valid = false) {
+        cout << "First number is incorrect." << endl;
+        return 0;
+    }
+    firstNumber = number;
+    segmentationFirst(firstNumber);
+
+
+    cout << "Input second number: ";
+    cin >> number;
+    validation(number);
+    if (valid = false) {
+        cout << "Second number is incorrect." << endl;
+        return 0;
+    }
+    secondNumber = number;
+    segmentationSecond(secondNumber);
+
+    compare(fp1, fp2, sp1, sp2);
+
+    return 0;
+}
