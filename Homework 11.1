@@ -1,0 +1,38 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+int key;
+string text;
+
+string cesar_encrypt(string text) {
+    for (int count = 0;count != text.length();++count) {
+        if (text[count] >= 65 && text[count] <= 90) {
+            text[count] += key;
+            if (text[count] < 65) text[count] = 91 - fabs(65 - text[count]);
+            else if (text[count] > 90) text[count] = 64 + fabs(text[count] - 90);
+        }
+        else if (text[count] >= 97 && text[count] <= 122) {
+            text[count] += key;
+            if (text[count] < 97) text[count] = 123 - fabs(97 - text[count]);
+            else if (text[count] > 122) text[count] = 96 + fabs(text[count] - 122);
+        }
+    }
+    return text;
+}
+
+string cesar_decrypt(string text) {
+    return key *= -1, cesar_encrypt(text);
+}
+
+int main() {
+    cout << "Input text: " << endl;
+    getline(cin, text);
+    cout << "Input key: ";
+    cin >> key;
+    cout << "encrypted: " << cesar_encrypt(text) << endl;
+    cout << "===================================================================" << endl;
+    cout << "decrypted: " << cesar_decrypt(cesar_encrypt(text)) << endl;
+
+    return 0;
+}
